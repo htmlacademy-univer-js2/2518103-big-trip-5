@@ -11,19 +11,22 @@ const MAX_POINT_COUNT = 3;
 export default class Presenter {
   PointListComponenet = new PointList();
 
-  constructor() {
-    this.tripcControlsFilters = document.querySelector('.trip-controls__filters');
-    this.tripEvents = document.querySelector('.trip-events');
+  constructor(tripControlFilters, tripEvents, pointsModel) {
+    this.tripEvents = tripEvents;
+    this.tripControlFilters = tripControlFilters;
+    this.pointsModel = pointsModel;
   }
 
   init() {
-    render(new Filter(), this.tripcControlsFilters);
+    this.allPoints = [...this.pointsModel.getPoints()];
+
+    render(new Filter(), this.tripControlFilters);
     render(new Sort(), this.tripEvents);
     render(this.PointListComponenet, this.tripEvents);
-    render(new EditForm(), this.PointListComponenet.getElement());
+    render(new EditForm({ point: this.allPoints[0] }), this.PointListComponenet.getElement());
 
     for (let i = 0; i < MAX_POINT_COUNT; i++) {
-      render(new Point(), this.PointListComponenet.getElement());
+      render(new Point({ point: this.allPoints[i] }), this.PointListComponenet.getElement());
     }
 
     render(new CreateForm(), this.PointListComponenet.getElement());
