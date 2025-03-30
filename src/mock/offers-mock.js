@@ -1,15 +1,15 @@
-import { getRandomElementArray, getRandomValue } from '../utils';
-import { EVENT_TYPES, OFFERS } from '../consts';
+import { getRandomElementOfArray, getRandomIntValue } from '../utils';
+import { EVENT_TYPES, OFFERS } from '../consts.js';
 
-const MIN_PRICE = 20;
-const MAX_PRICE = 3000;
+const MIN_COST = 10;
+const MAX_COST = 2000;
 
-const getRandomOffers = () => ({
-  'type': getRandomElementArray(EVENT_TYPES),
-  'title': getRandomElementArray(OFFERS),
-  'price': getRandomValue(MIN_PRICE, MAX_PRICE)
-});
+function getRandomOffer() {
+  return {
+    type: getRandomElementOfArray(EVENT_TYPES),
+    title: getRandomElementOfArray(OFFERS),
+    price: getRandomIntValue(MIN_COST, MAX_COST)
+  };
+}
 
-export { getRandomOffers };
-
-
+export { getRandomOffer };

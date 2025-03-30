@@ -1,34 +1,71 @@
-import Filter from '../view/filter-view';
-import CreateForm from '../view/create-form-view';
-import EditForm from '../view/edit-form-view';
-import PointList from '../view/point-list-view';
-import Point from '../view/point-view';
-import Sort from '../view/sort-view';
-import { render } from '../render';
-
-const MAX_POINT_COUNT = 3;
+import Filters from '../view/filter-view.js';
+import FormEditing from '../view/edit-form-view.js';
+import PointRouteList from '../view/point-list-view.js';
+import PointRoute from '../view/point-view.js';
+import Sorting from '../view/sort-view.js';
+import { render, replace } from '../framework/render.js';
 
 export default class Presenter {
-  PointListComponenet = new PointList();
+  #pointRouteListPart = new PointRouteList();
+  #tripControlFilters = null;
+  #tripEventsPart = null;
+  #pointsModel = null;
+  #allPoints = null;
 
-  constructor(tripControlFilters, tripEvents, pointsModel) {
-    this.tripEvents = tripEvents;
-    this.tripControlFilters = tripControlFilters;
-    this.pointsModel = pointsModel;
+  constructor({ tripControlFilters, tripEvents, pointsModel }) {
+    this.#tripEventsPart = tripEvents;
+    this.#tripControlFilters = tripControlFilters;
+    this.#pointsModel = pointsModel;
   }
 
   init() {
-    this.allPoints = [...this.pointsModel.getPoints()];
+    this.#allPoints = this.#pointsModel.points;
 
-    render(new Filter(), this.tripControlFilters);
-    render(new Sort(), this.tripEvents);
-    render(this.PointListComponenet, this.tripEvents);
-    render(new EditForm({ point: this.allPoints[0] }), this.PointListComponenet.getElement());
+    render(new Filters(), this.#tripControlFilters);
+    render(new Sorting(), this.#tripEventsPart);
+    render(this.#pointRouteListPart, this.#tripEventsPart);
 
-    for (let i = 0; i < MAX_POINT_COUNT; i++) {
-      render(new Point({ point: this.allPoints[i] }), this.PointListComponenet.getElement());
+    this.#allPoints.forEach((point) => this.#renderPoint(point));
+  }
+
+  #renderPoint(point) {
+    const onEscKeydown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        replaceEditingFormPoint();
+        document.removeEventListener('keydown', onEscKeydown);
+      }
+    };
+
+    const editForm = new FormEditing({
+      point,
+      onSubmitClick: () => {
+        replaceEditingFormPoint();
+        document.removeEventListener('keydown', onEscKeydown);
+      },
+
+      onRollButtonClick: () => {
+        replaceEditingFormPoint();
+        document.removeEventListener('keydown', onEscKeydown);
+      }
+    });
+
+    const pointRouteItem = new PointRoute({
+      point,
+      onRollButtonClick: () => {
+        replacePointEditingForm();
+        document.addEventListener('keydown', onEscKeydown);
+      }
+    });
+
+    function replaceEditingFormPoint() {
+      replace(pointRouteItem, editForm);
     }
 
-    render(new CreateForm(), this.PointListComponenet.getElement());
+    function replacePointEditingForm() {
+      replace(editForm, pointRouteItem);
+    }
+
+    render(pointRouteItem, this.#pointRouteListPart.element);
   }
 }

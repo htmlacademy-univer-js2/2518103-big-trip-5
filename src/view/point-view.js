@@ -1,32 +1,33 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getDateDifference, getTime, getMonthAndDate } from '../utils.js';
 
-function createPointTemlate(point) {
-  const { type, destination, dateFrom, dateTo, basePrice, offers, isFavorite } = point;
+const createPointRouteTemplate = (point) => {
+  const { eventType, destination, startDatetime, endDatetime, price, offers, isFavorite } = point;
 
-  const startDate = getMonthAndDate(dateFrom);
-  const endDate = getMonthAndDate(dateTo);
-  const startTime = getTime(dateFrom);
-  const endTime = getTime(dateTo);
-  const duration = getDateDifference(dateFrom, dateTo);
+  const startDate = getMonthAndDate(startDatetime);
+  const endDate = getMonthAndDate(endDatetime);
+  const startTime = getTime(startDatetime);
+  const endTime = getTime(endDatetime);
+  const duration = getDateDifference(startDatetime, endDatetime);
 
-  return (`<li class="trip-events__item">
+  return (
+    `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${dateFrom}">${startDate}</time>
+        <time class="event__date" datetime="${startDatetime}">${startDate}</time>
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType.toLowerCase()}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destination.city}</h3>
+        <h3 class="event__title">${eventType} ${destination.city}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFrom}">${startTime} ${startDate === endDate ? '' : startDate}</time>
+            <time class="event__start-time" datetime="${startDatetime}">${startTime} ${startDate === endDate ? '' : startDate}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateTo}">${endTime} ${startDate === endDate ? '' : endDate}</time>
+            <time class="event__end-time" datetime="${endDatetime}">${endTime} ${startDate === endDate ? '' : endDate}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
@@ -46,27 +47,24 @@ function createPointTemlate(point) {
           <span class="visually-hidden">Open event</span>
         </button>
       </div>
-    </li>`);
-}
+    </li>`
+  );
+};
 
-export default class Point {
-  constructor({ point }) {
-    this.point = point;
+export default class PointRoute extends AbstractView {
+  #point = null;
+
+  constructor({ point, onRollButtonClick }) {
+    super();
+    this.#point = point;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
+      event.preventDefault();
+      onRollButtonClick();
+    });
   }
 
-  getTemplate() {
-    return createPointTemlate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createPointRouteTemplate(this.#point);
   }
 }
