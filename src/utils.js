@@ -52,4 +52,14 @@ const getMonthAndDate = (date) => dayjs(date).format('MMM DD');
 
 const getFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
-export { getRandomElementOfArray, getRandomIntValue, getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate };
+function isEscapeKey(evt) {
+  return evt.key === 'Escape';
+}
+
+const isPastEvent = (date) => dayjs(date).isBefore(dayjs());
+
+const isPresentEvent = (dateFrom, dateTo) => dayjs(dateFrom).isBefore(dayjs()) && dayjs(dateTo).isAfter(dayjs());
+
+const isFutureEvent = (date) => dayjs(date).isAfter(dayjs());
+
+export { getRandomElementOfArray, getRandomIntValue, getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isEscapeKey, isFutureEvent, isPastEvent, isPresentEvent };
