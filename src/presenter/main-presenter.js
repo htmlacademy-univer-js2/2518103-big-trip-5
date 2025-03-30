@@ -3,7 +3,10 @@ import FormEditing from '../view/edit-form-view.js';
 import PointRouteList from '../view/point-list-view.js';
 import PointRoute from '../view/point-view.js';
 import Sorting from '../view/sort-view.js';
+import EmptyListView from '../view/empty-list-view.js';
 import { render, replace } from '../framework/render.js';
+import { isEscapeKey } from '../utils.js';
+import { generateFilter } from '../mock/filters-mock.js';
 
 export default class Presenter {
   #pointRouteListPart = new PointRouteList();
@@ -21,16 +24,22 @@ export default class Presenter {
   init() {
     this.#allPoints = this.#pointsModel.points;
 
-    render(new Filters(), this.#tripControlFilters);
-    render(new Sorting(), this.#tripEventsPart);
-    render(this.#pointRouteListPart, this.#tripEventsPart);
+    const currentFilters = generateFilter(this.#allPoints);
 
-    this.#allPoints.forEach((point) => this.#renderPoint(point));
+    if (this.#allPoints.length > 0) {
+      render(new Filters({ currentFilters }), this.#tripControlFilters);
+      render(new Sorting(), this.#tripEventsPart);
+      render(this.#pointRouteListPart, this.#tripEventsPart);
+
+      this.#allPoints.forEach((point) => this.#renderPoint(point));
+    } else {
+      render(new EmptyListView(), this.#tripEventsPart);
+    }
   }
 
   #renderPoint(point) {
     const onEscKeydown = (event) => {
-      if (event.key === 'Escape') {
+      if (isEscapeKey(event)) {
         event.preventDefault();
         replaceEditingFormPoint();
         document.removeEventListener('keydown', onEscKeydown);
