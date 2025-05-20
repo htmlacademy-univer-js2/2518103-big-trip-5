@@ -1,4 +1,6 @@
-const getRandomElementOfArray = (items) => items[Math.floor(Math.random() * items.length)];
+const getRandomElementOfArray = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const getRandomElementsOfArray = (arr, count) => [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
 
 const getRandomIntValue = (min, max) => {
   const lowerBorder = Math.ceil(Math.min(min, max));
@@ -12,4 +14,4 @@ function isEscapeKey(evt) {
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 
-export { getRandomElementOfArray, getRandomIntValue, isEscapeKey, updateItem };
+export { getRandomElementOfArray, getRandomElementsOfArray, getRandomIntValue, isEscapeKey, updateItem };
