@@ -1,5 +1,7 @@
 const CITIES = ['Berlin', 'Stuttgart', 'Minsk', 'Köln', 'London', 'Lissabon', 'Irkutsk', 'Sydney'];
+
 const EVENT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+
 const DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
@@ -23,4 +25,15 @@ const FILTER_TYPES = {
   PAST: 'past',
 };
 
-export { CITIES, EVENT_TYPES, DESCRIPTIONS, OFFERS, FILTER_TYPES };
+const SORT_TYPES = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
+const MODE = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { CITIES, EVENT_TYPES, DESCRIPTIONS, OFFERS, FILTER_TYPES, SORT_TYPES, MODE };
