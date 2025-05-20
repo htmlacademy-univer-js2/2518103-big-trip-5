@@ -2,14 +2,14 @@ import dayjs from 'dayjs';
 
 const getTwoRandomDates = () => {
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - Math.floor(Math.random() * 365));
+  startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 10 * (Math.random() < 0.5 ? -1 : 1)));
 
   startDate.setHours(Math.floor(Math.random() * 24));
   startDate.setMinutes(Math.floor(Math.random() * 60));
   startDate.setSeconds(0);
 
   const endDate = new Date(startDate);
-  const daysDifference = Math.floor(Math.random() * 4);
+  const daysDifference = Math.floor(Math.random() * 10);
 
   endDate.setDate(startDate.getDate() + daysDifference);
 
@@ -56,4 +56,10 @@ const sortByTime = (pointA, pointB) => dayjs(pointB.endDatetime).diff(pointB.sta
 
 const sortByPrice = (pointA, pointB) => pointB.price - pointA.price;
 
-export { getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, sortByDay, sortByTime, sortByPrice };
+const getOffersByType = (type, offers) => offers.find((offer) => offer.type === type)?.offers;
+
+const getOfferById = (id, offers) => offers.find((offer) => offer.id === id);
+
+const getDestinationByCity = (city, destinations) => destinations.find((destination) => destination.city === city);
+
+export { getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, sortByDay, sortByTime, sortByPrice, getOffersByType, getOfferById, getDestinationByCity };

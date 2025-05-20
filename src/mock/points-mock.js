@@ -2,26 +2,28 @@ import { EVENT_TYPES } from '../consts.js';
 import { getRandomElementOfArray, getRandomIntValue } from '../utils/common-utils.js';
 import { getTwoRandomDates } from '../utils/point-utils.js';
 import { getRandomDestination } from './destinations-mock.js';
-import { getRandomOffer } from './offers-mock.js';
+import { getRandomOffersIDs } from './offers-mock.js';
 
 const MIN_COST = 2000;
 const MAX_COST = 5000;
-const OFFERS_MIN_COUNT = 1;
-const OFFERS_MAX_COUNT = 5;
+const POINTS_MAX_COUNT = 5;
 
 const getRandomPoint = () => {
   const twoDates = getTwoRandomDates();
+  const eventType = getRandomElementOfArray(EVENT_TYPES);
 
   return {
     id: crypto.randomUUID(),
-    eventType: getRandomElementOfArray(EVENT_TYPES),
+    eventType: eventType,
     destination: getRandomDestination(),
     startDatetime: twoDates[0],
     endDatetime: twoDates[1],
     price: getRandomIntValue(MIN_COST, MAX_COST),
-    offers: Array.from({ length: getRandomIntValue(OFFERS_MIN_COUNT, OFFERS_MAX_COUNT) }, getRandomOffer),
+    offers: getRandomOffersIDs(eventType),
     isFavorite: Boolean(getRandomIntValue(0, 1)),
   };
 };
 
-export { getRandomPoint };
+const POINTS = Array.from({ length: POINTS_MAX_COUNT }, getRandomPoint);
+
+export { POINTS };

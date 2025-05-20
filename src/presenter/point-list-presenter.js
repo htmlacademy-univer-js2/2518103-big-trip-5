@@ -13,21 +13,26 @@ export default class PointListPresenter {
   #pointsListComponent = new PointRouteListView();
   #filtersContainer = null;
   #tripEventsContainer = null;
-  #pointsModel = null;
+  #pointsListModel = null;
+  #emptyPointListComponent = null;
   #points = null;
+  #destinations = null;
+  #offers = null;
   #filters = null;
   #sortComponent = null;
   #currentSortType = SORT_TYPES.DAY;
   #pointPresenters = new Map();
 
-  constructor({ tripControlFilters, tripEvents, pointsModel }) {
+  constructor({ tripControlFilters, tripEvents, pointsListModel }) {
     this.#tripEventsContainer = tripEvents;
     this.#filtersContainer = tripControlFilters;
-    this.#pointsModel = pointsModel;
+    this.#pointsListModel = pointsListModel;
   }
 
   init() {
-    this.#points = this.#pointsModel.points;
+    this.#points = this.#pointsListModel.points;
+    this.#offers = this.#pointsListModel.offers;
+    this.#destinations = this.#pointsListModel.destinations;
     this.#filters = generateFilter(this.#points);
 
     this.#renderFilters();
@@ -37,8 +42,10 @@ export default class PointListPresenter {
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
+      destinations: this.#destinations,
+      offers: this.#offers,
       pointsListComponent: this.#pointsListComponent,
-      changeDataOnFavorite: this.#onFavoriteBtnClick,
+      updateData: this.#updatePointsList,
       changeMode: this.#onModeChange
     });
     pointPresenter.init(point);
@@ -49,15 +56,19 @@ export default class PointListPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #onFavoriteBtnClick = (updatedPoint) => {
+  #updatePointsList = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
-  #clearPointsList() {
+  #clearPointsList = () => {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
-  }
+
+    if (this.#emptyPointListComponent) {
+      remove(this.#emptyPointListComponent);
+    }
+  };
 
   #onSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -110,7 +121,8 @@ export default class PointListPresenter {
   }
 
   #renderNoPoints() {
-    render(new EmptyListView(), this.#pointsListComponent);
+    this.#emptyPointListComponent = new EmptyListView();
+    render(this.#emptyPointListComponent, this.#pointsListComponent);
   }
 
   #renderFilters() {
