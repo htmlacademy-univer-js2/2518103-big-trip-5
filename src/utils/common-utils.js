@@ -10,4 +10,6 @@ function isEscapeKey(evt) {
   return evt.key === 'Escape';
 }
 
-export { getRandomElementOfArray, getRandomIntValue, isEscapeKey };
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
+export { getRandomElementOfArray, getRandomIntValue, isEscapeKey, updateItem };

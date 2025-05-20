@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { EVENT_TYPES } from '../consts.js';
 import { getRandomElementOfArray, getRandomIntValue } from '../utils/common-utils.js';
 import { getTwoRandomDates } from '../utils/point-utils.js';
@@ -14,7 +13,7 @@ const getRandomPoint = () => {
   const twoDates = getTwoRandomDates();
 
   return {
-    id: nanoid(),
+    id: crypto.randomUUID(),
     eventType: getRandomElementOfArray(EVENT_TYPES),
     destination: getRandomDestination(),
     startDatetime: twoDates[0],
