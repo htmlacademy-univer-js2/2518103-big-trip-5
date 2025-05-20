@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getFullDate } from '../utils.js';
+import { getFullDate } from '../utils/point-utils.js';
 import { EVENT_TYPES, CITIES } from '../consts.js';
 
 const makeFormEditingTemplate = (data) => {
@@ -86,7 +86,7 @@ const makeFormEditingTemplate = (data) => {
   );
 };
 
-export default class FormEditing extends AbstractView {
+export default class FormEditingView extends AbstractView {
   #point = null;
 
   constructor({ point, onRollButtonClick, onSubmitClick }) {

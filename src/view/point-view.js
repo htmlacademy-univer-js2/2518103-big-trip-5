@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getDateDifference, getTime, getMonthAndDate } from '../utils.js';
+import { getDateDifference, getTime, getMonthAndDate } from '../utils/point-utils.js';
 
 const createPointRouteTemplate = (point) => {
   const { eventType, destination, startDatetime, endDatetime, price, offers, isFavorite } = point;
@@ -51,16 +51,21 @@ const createPointRouteTemplate = (point) => {
   );
 };
 
-export default class PointRoute extends AbstractView {
+export default class PointRouteView extends AbstractView {
   #point = null;
 
-  constructor({ point, onRollButtonClick }) {
+  constructor({ point, onRollButtonClick, onFavoriteClick }) {
     super();
     this.#point = point;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', (event) => {
       event.preventDefault();
       onRollButtonClick();
+    });
+
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', (event) => {
+      event.preventDefault();
+      onFavoriteClick();
     });
   }
 

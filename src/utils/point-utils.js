@@ -1,13 +1,5 @@
 import dayjs from 'dayjs';
 
-const getRandomElementOfArray = (items) => items[Math.floor(Math.random() * items.length)];
-
-const getRandomIntValue = (min, max) => {
-  const lowerBorder = Math.ceil(Math.min(min, max));
-  const upperBorder = Math.floor(Math.max(min, max));
-  return Math.floor(Math.random() * (upperBorder - lowerBorder + 1) + lowerBorder);
-};
-
 const getTwoRandomDates = () => {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - Math.floor(Math.random() * 365));
@@ -46,15 +38,13 @@ const getDateDifference = (date1, date2) => {
   }
 };
 
+const updatePoint = (points, updatedPoint) => points.map((point) => point.id === updatedPoint.id ? updatedPoint : point);
+
 const getTime = (date) => dayjs(date).format('HH:mm');
 
 const getMonthAndDate = (date) => dayjs(date).format('MMM DD');
 
 const getFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
-
-function isEscapeKey(evt) {
-  return evt.key === 'Escape';
-}
 
 const isPastEvent = (date) => dayjs(date).isBefore(dayjs());
 
@@ -62,4 +52,4 @@ const isPresentEvent = (dateFrom, dateTo) => dayjs(dateFrom).isBefore(dayjs()) &
 
 const isFutureEvent = (date) => dayjs(date).isAfter(dayjs());
 
-export { getRandomElementOfArray, getRandomIntValue, getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isEscapeKey, isFutureEvent, isPastEvent, isPresentEvent };
+export { getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, updatePoint };

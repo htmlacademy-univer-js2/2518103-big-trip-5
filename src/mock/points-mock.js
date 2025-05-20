@@ -1,5 +1,7 @@
-import { EVENT_TYPES } from '../consts';
-import { getRandomElementOfArray, getRandomIntValue, getTwoRandomDates } from '../utils';
+import { nanoid } from 'nanoid';
+import { EVENT_TYPES } from '../consts.js';
+import { getRandomElementOfArray, getRandomIntValue } from '../utils/common-utils.js';
+import { getTwoRandomDates } from '../utils/point-utils.js';
 import { getRandomDestination } from './destinations-mock.js';
 import { getRandomOffer } from './offers-mock.js';
 
@@ -12,6 +14,7 @@ const getRandomPoint = () => {
   const twoDates = getTwoRandomDates();
 
   return {
+    id: nanoid(),
     eventType: getRandomElementOfArray(EVENT_TYPES),
     destination: getRandomDestination(),
     startDatetime: twoDates[0],
