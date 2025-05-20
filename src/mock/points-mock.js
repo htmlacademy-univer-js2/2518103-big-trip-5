@@ -14,7 +14,7 @@ const getRandomPoint = () => {
 
   return {
     id: crypto.randomUUID(),
-    eventType: eventType,
+    eventType,
     destination: getRandomDestination(),
     startDatetime: twoDates[0],
     endDatetime: twoDates[1],
