@@ -165,7 +165,7 @@ const makeFormCreationTemplate = () => (
     </li>`
 );
 
-export default class FormCreation extends AbstractView {
+export default class FormCreationView extends AbstractView {
   get template() {
     return makeFormCreationTemplate();
   }

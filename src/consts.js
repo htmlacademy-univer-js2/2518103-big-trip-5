@@ -1,5 +1,3 @@
-import { isFutureEvent, isPastEvent, isPresentEvent } from './utils.js';
-
 const CITIES = ['Berlin', 'Stuttgart', 'Minsk', 'Köln', 'London', 'Lissabon', 'Irkutsk', 'Sydney'];
 const EVENT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 const DESCRIPTIONS = [
@@ -18,18 +16,11 @@ const DESCRIPTIONS = [
 
 const OFFERS = ['Rent a car', 'Add luggage', 'Add breakfast', 'Switch to business', 'Upgrade to business class'];
 
-const FilterType = {
+const FILTER_TYPES = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-const filter = {
-  [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.FUTURE]: (points) => points.filter((point) => isFutureEvent(point.startDatetime)),
-  [FilterType.PRESENT]: (points) => points.filter((point) => isPresentEvent(point.startDatetime, point.endDatetime)),
-  [FilterType.PAST]: (points) => points.filter((point) => isPastEvent(point.endDatetime))
-};
-
-export { CITIES, EVENT_TYPES, DESCRIPTIONS, OFFERS, filter };
+export { CITIES, EVENT_TYPES, DESCRIPTIONS, OFFERS, FILTER_TYPES };

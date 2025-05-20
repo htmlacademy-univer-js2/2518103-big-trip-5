@@ -10,7 +10,7 @@ const createFiltersTemplate = (filters) => `<form class="trip-filters" action="#
     </div>`).join('')}
   </form>`;
 
-export default class Filters extends AbstractView {
+export default class FiltersView extends AbstractView {
   #filters = null;
 
   constructor({ currentFilters = [] } = {}) {
