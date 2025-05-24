@@ -6,25 +6,6 @@ function isEscapeKey(evt) {
   return evt.key === 'Escape';
 }
 
-const getTwoRandomDates = () => {
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 10 * (Math.random() < 0.5 ? -1 : 1)));
-
-  startDate.setHours(Math.floor(Math.random() * 24));
-  startDate.setMinutes(Math.floor(Math.random() * 60));
-  startDate.setSeconds(0);
-
-  const endDate = new Date(startDate);
-  const daysDifference = Math.floor(Math.random() * 10);
-
-  endDate.setDate(startDate.getDate() + daysDifference);
-
-  endDate.setHours(Math.floor(Math.random() * 24));
-  endDate.setMinutes(Math.floor(Math.random() * 60));
-
-  return [startDate, endDate];
-};
-
 const getDateDifference = (date1, date2) => {
   const start = dayjs(date1);
   const end = dayjs(date2);
@@ -46,7 +27,9 @@ const getDateDifference = (date1, date2) => {
 
 const getTime = (date) => dayjs(date).format('HH:mm');
 
-const getMonthAndDate = (date) => dayjs(date).format('MMM DD');
+const getMonthAndDay = (date) => dayjs(date).format('MMM DD');
+
+const getDayAndMonth = (date) => dayjs(date).format('D MMM');
 
 const getFullDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 
@@ -68,6 +51,57 @@ const getOffersByType = (type, offers) => offers.find((offer) => offer.type === 
 
 const getOfferById = (id, offers) => offers?.find((offer) => offer.id === id);
 
-const getDestinationById = (id, destinations) => destinations.find((destination) => destination.id === id);
+const getDestinationById = (id, destinations) => destinations?.find((destination) => destination.id === id);
 
-export { updateItem, isEscapeKey, getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, isSameDate, sortByDay, sortByTime, sortByPrice, getOffersByType, getOfferById, getDestinationById };
+const getPointsDataRange = (points) => {
+  if (!points.length) {
+    return { startDate: '', endDate: '' };
+  }
+
+  const sortedPoints = points.sort(sortByDay);
+  const startDate = getDayAndMonth(sortedPoints[0].dateFrom);
+  const endDate = getDayAndMonth(sortedPoints.at(-1).dateTo);
+
+  return { startDate, endDate };
+};
+
+const getTripRoute = (points, destinations) => {
+  const cities = [];
+  const sortedPoints = points.sort(sortByDay);
+
+  sortedPoints.forEach((point) => {
+    cities.push(getDestinationById(point.destination, destinations).name);
+  });
+
+  return cities;
+};
+
+const getTripPrice = (points, offers) =>
+  points.reduce((total, { type, basePrice, offers: pointOffers }) => {
+    const availableOffers = getOffersByType(type, offers);
+    const offersSum = pointOffers
+      .reduce((sum, offerId) => sum + getOfferById(offerId, availableOffers).price, 0);
+    return total + basePrice + offersSum;
+  }, 0);
+
+export {
+  updateItem,
+  isEscapeKey,
+  getDateDifference,
+  getTime,
+  getMonthAndDay,
+  getFullDate,
+  isPastEvent,
+  isPresentEvent,
+  isFutureEvent,
+  isSameDate,
+  sortByDay,
+  sortByTime,
+  sortByPrice,
+  getOffersByType,
+  getOfferById,
+  getDestinationById,
+  getPointsDataRange,
+  getTripRoute,
+  getTripPrice,
+};
