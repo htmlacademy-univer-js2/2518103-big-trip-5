@@ -1,6 +1,7 @@
 import PointRouteListView from '../view/point-list-view.js';
 import SortingView from '../view/sort-view.js';
 import EmptyListView from '../view/empty-list-view.js';
+import ErrorView from '../view/error-view.js';
 import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
@@ -23,6 +24,7 @@ export default class PointListPresenter {
   #newPointPresenter = null;
   #pointPresenters = new Map();
   #loadingComponent = new LoadingView();
+  #errorComponent = new ErrorView();
   #isLoading = true;
   #uiBlocker = new UiBlocker({
     lowerLimit: TIME_LIMIT.LOWER_LIMIT,
@@ -47,6 +49,7 @@ export default class PointListPresenter {
   }
 
   init() {
+    this.#newPointButtonPresenter.disableButton();
     this.#renderSort();
     this.#renderList();
   }
@@ -116,6 +119,12 @@ export default class PointListPresenter {
       case UPDATE_TYPES.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+        if (data.isError) {
+          this.#newPointButtonPresenter.disableButton();
+          this.#renderError();
+          return;
+        }
+        this.#newPointButtonPresenter.enableButton();
         this.#renderList();
     }
   };
@@ -213,6 +222,10 @@ export default class PointListPresenter {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#tripEventsContainer, RenderPosition.BEFOREEND);
+  }
+
+  #renderError() {
+    render(this.#errorComponent, this.#tripEventsContainer, RenderPosition.BEFOREEND);
   }
 
   get points() {

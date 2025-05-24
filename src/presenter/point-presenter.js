@@ -55,7 +55,7 @@ export default class PointPresenter {
       },
       onSubmitButtonClick: async (value) => {
         const isMinor = !isSameDate(value.dateFrom, this.#point.dateFrom) ||
-          !isSameDate(value.dateTo, this.#point.dateTo);
+          !isSameDate(value.dateTo, this.#point.dateTo) || value.basePrice !== this.#point.basePrice;
         await this.#updateData(ACTIONS.UPDATE_POINT, isMinor ? UPDATE_TYPES.MINOR : UPDATE_TYPES.PATCH, value);
       },
       onDeleteClick: async (value) => {
@@ -111,6 +111,11 @@ export default class PointPresenter {
   }
 
   setAborting() {
+    if (this.#mode === MODE.DEFAULT) {
+      this.#pointItem.shake();
+      return;
+    }
+
     const resetFormState = () => {
       this.#editFormItem.updateElement({
         isDisabled: false,
@@ -118,7 +123,6 @@ export default class PointPresenter {
         isDeleting: false,
       });
     };
-
     this.#editFormItem.shake(resetFormState);
   }
 
