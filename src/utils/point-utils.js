@@ -1,5 +1,11 @@
 import dayjs from 'dayjs';
 
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
+function isEscapeKey(evt) {
+  return evt.key === 'Escape';
+}
+
 const getTwoRandomDates = () => {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 10 * (Math.random() < 0.5 ? -1 : 1)));
@@ -64,4 +70,4 @@ const getOfferById = (id, offers) => offers?.find((offer) => offer.id === id);
 
 const getDestinationById = (id, destinations) => destinations.find((destination) => destination.id === id);
 
-export { getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, isSameDate, sortByDay, sortByTime, sortByPrice, getOffersByType, getOfferById, getDestinationById };
+export { updateItem, isEscapeKey, getTwoRandomDates, getDateDifference, getTime, getMonthAndDate, getFullDate, isPastEvent, isPresentEvent, isFutureEvent, isSameDate, sortByDay, sortByTime, sortByPrice, getOffersByType, getOfferById, getDestinationById };

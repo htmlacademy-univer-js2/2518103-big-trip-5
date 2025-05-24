@@ -1,9 +1,8 @@
 import PointRouteView from '../view/point-view.js';
 import { render, replace, remove } from '../framework/render.js';
 import FormEditingView from '../view/edit-form-view.js';
-import { isEscapeKey } from '../utils/common-utils.js';
 import { MODE, ACTIONS, UPDATE_TYPES } from '../consts.js';
-import { isSameDate } from '../utils/point-utils.js';
+import { isSameDate, isEscapeKey } from '../utils/point-utils.js';
 
 export default class PointPresenter {
   #point = null;
@@ -58,7 +57,6 @@ export default class PointPresenter {
         const isMinor = !isSameDate(value.dateFrom, this.#point.dateFrom) ||
           !isSameDate(value.dateTo, this.#point.dateTo);
         await this.#updateData(ACTIONS.UPDATE_POINT, isMinor ? UPDATE_TYPES.MINOR : UPDATE_TYPES.PATCH, value);
-        this.#replaceEditFormToPoint();
       },
       onDeleteClick: async (value) => {
         await this.#updateData(ACTIONS.DELETE_POINT, UPDATE_TYPES.MINOR, value);
@@ -75,13 +73,15 @@ export default class PointPresenter {
     }
 
     if (this.#mode === MODE.EDITING) {
-      replace(this.#editFormItem, prevEditFormComponent);
+      replace(this.#pointItem, prevEditFormComponent);
+      this.#mode = MODE.DEFAULT;
     }
 
     remove([prevPointComponent, prevEditFormComponent]);
   }
 
   destroy() {
+    document.removeEventListener('keydown', this.#onEscKeydown);
     remove([this.#pointItem, this.#editFormItem]);
   }
 
@@ -90,6 +90,36 @@ export default class PointPresenter {
       this.#editFormItem.reset(this.#point);
       this.#replaceEditFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === MODE.EDITING) {
+      this.#editFormItem.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === MODE.EDITING) {
+      this.#editFormItem.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#editFormItem.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editFormItem.shake(resetFormState);
   }
 
   #replacePointToEditForm() {
